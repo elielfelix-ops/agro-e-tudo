@@ -30,7 +30,81 @@
 </html>
 style.css
 CSS
-https://github.com/elielfelix-ops/agro-e-tudo/blob/main/README.mdhttps://github.com/elielfelix-ops/agro-e-tudo/blob/main/README.mdhttps://github.com/elielfelix-ops/agro-e-tudo/blob/main/README.md
+// Array para armazenar os itens do carrinho
+let carrinho = [];
+let total = 0;
+
+// Função para adicionar produtos ao carrinho
+function adicionarAoCarrinho(nomeProduto, precoProduto) {
+    // Adiciona o produto ao array
+    carrinho.push({ nome: nomeProduto, preco: precoProduto });
+    
+    // Atualiza o valor total
+    total += precoProduto;
+    
+    // Atualiza a interface do site
+    atualizarInterfaceCarrinho();
+}
+
+// Função para atualizar o HTML do carrinho
+function atualizarInterfaceCarrinho() {
+    const listaCarrinho = document.getElementById('lista-carrinho');
+    const totalCarrinho = document.getElementById('total-carrinho');
+    const contadorItens = document.getElementById('contador-itens');
+    
+    // Limpa a lista antes de reconstruir
+    listaCarrinho.innerHTML = '';
+    
+    // Lista cada produto no carrinho
+    carrinho.forEach((produto) => {
+        const item = document.createElement('li');
+        item.textContent = `${produto.nome} - R$ ${produto.preco.toFixed(2)}`;
+        listaCarrinho.appendChild(item);
+    });
+    
+    // Atualiza o texto do total e a quantidade de itens
+    totalCarrinho.textContent = total.toFixed(2);
+    contadorItens.textContent = carrinho.length;
+}
+
+// Função para enviar o pedido direto para o WhatsApp da loja
+function finalizarPedido() {
+    if (carrinho.length === 0) {
+        alert("Seu carrinho está vazio! Adicione sementes ou insumos primeiro.");
+        return;
+    }
+    
+    // Cria o texto da mensagem
+    let mensagem = "Olá, Sementes do Futuro! Gostaria de fazer o seguinte pedido:\n\n";
+    
+    carrinho.forEach((produto) => {
+        mensagem += `- ${produto.nome}: R$ ${produto.preco.toFixed(2)}\n`;
+    });
+    
+    mensagem += `\n*Total: R$ ${total.toFixed(2)}*`;
+    
+    // Codifica o texto para o formato de URL
+    const mensagemCodificada = encodeURIComponent(mensagem);
+    
+    // Número fictício de WhatsApp da loja (substitua pelo real)
+    const numeroWhats = "5511999999999"; 
+    
+    // Abre o WhatsApp com a mensagem pronta
+    window.open(`https://wa.me/${numeroWhats}?text=${mensagemCodificada}`, '_blank');
+
+<button onclick="adicionarAoCarrinho('Sementes de Milho Híbrido', 180.00)">
+    Adicionar ao Carrinho
+</button>
+
+<div class="carrinho-container">
+    <h3>Seu Carrinho (<span id="contador-itens">0</span>)</h3>
+    <ul id="lista-carrinho">
+        </ul>
+    <p>Total: R$ <span id="total-carrinho">0,00</span></p>
+    <button onclick="finalizarPedido()">Finalizar via WhatsApp 🌾</button>
+</div>
+
+<script src="script.js"></script>
 
 /* Configuração do corpo da página */
 body {
